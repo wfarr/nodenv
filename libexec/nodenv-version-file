@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Summary: Detect the file that sets the current nodenv version
+
+# Bomb out if we hit an error, ever
+set -e
+
+# Verbose output in debug mode
+[ -n "$NODENV_DEBUG" ] && {
+  set -x
+}
+
+find_local_version_file() {
+  local root="$1"
+  while [ -n "$root" ]; do
+    if [ -e "${root}/.node-version" ]; then
+      echo "${root}/.node-version"
+      exit
+    elif [ -e "${root}/.nvm-version" ]; then
+      echo "${root}/.nvm-version"
+      exit
+    fi
+    root="${root%/*}"
+  done
+}
+
+find_local_version_file "$NODENV_DIR"
+[ "$NODENV_DIR" = "$PWD" ] || find_local_version_file "$PWD"
+
+global_version_file="${NODENV_ROOT}/version"
+
+if [ -e "$global_version_file" ]; then
+  echo "$global_version_file"
+fi
+
