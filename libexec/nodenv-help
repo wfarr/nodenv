@@ -148,7 +148,7 @@ if [ -z "$1" ] || [ "$1" == "nodenv" ]; then
   [ -z "$usage" ] || exit
   echo
   echo "Some useful nodenv commands are:"
-  print_summaries exec global local install shell uninstall version versions 
+  print_summaries exec shell local global install uninstall version versions rehash
   echo
   echo "See \`nodenv help <command>' for information on a specific command."
 else

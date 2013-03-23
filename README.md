@@ -5,10 +5,21 @@ rbenv, but for node.
 ## Usage
 
 ```
+» nodenv help
+Usage: nodenv <command> [<args>]
+
+Some useful nodenv commands are:
+   exec        Execute a command from a particular NodeJS version.
+   shell       Set NODENV_VERSION for the lifetime of a shell.
+   local       Persist the preferred NodeJS version in the cwd.
+   global      Persist the preferred NodeJS default version.
    install     Install a version of NodeJS.
    uninstall   Uninstall a version of NodeJS.
    version     Show the current NodeJS version.
    versions    Display all versions of NodeJS installed in `${NODENV_ROOT}/versions/*'.
+   rehash      Rehash nodenv shims (run this after installing executables)
+
+See `nodenv help <command>' for information on a specific command.
 ```
 
 ## Credits
