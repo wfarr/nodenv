@@ -2,6 +2,21 @@
 
 rbenv, but for node.
 
+## Installation
+
+To install the latest stable release:
+
+```
+git clone -b v0.2.0 https://github.com/wfarr/nodenv.git ~/.nodenv
+```
+
+Then add the following to your shell config at the end:
+
+```
+export PATH="$HOME/.nodenv/bin:$PATH"
+eval "(nodenv init -)"
+```
+
 ## Usage
 
 ```
