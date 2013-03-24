@@ -41,6 +41,8 @@ curl -s -f "$download" > /tmp/node-$version.tar.gz && \
   tar zxf /tmp/node-$version.tar.gz --strip-components 1 || \
 {
   cd $OLDPWD
+  rmdir "$version_dir"
+
   echo "nodenv: unable to install NodeJS \`${version}' from binary, download not available"
   exit 1
 }
