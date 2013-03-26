@@ -7,7 +7,7 @@ rbenv, but for node.
 To install the latest stable release:
 
 ```
-git clone -b v0.2.0 https://github.com/wfarr/nodenv.git ~/.nodenv
+git clone -b v0.2.2 https://github.com/wfarr/nodenv.git ~/.nodenv
 ```
 
 Then add the following to your shell config at the end:
