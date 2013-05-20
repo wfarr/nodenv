@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # nodenv version
-version="0.3.0"
+version="0.3.1"
 
 # Bomb out if we hit an error, ever
 set -e
