@@ -5,6 +5,7 @@ version="0.0.0"
 
 # Bomb out if we hit an error, ever
 set -e
+export -n CDPATH
 
 # Verbose output in debug mode
 [ -n "$NODENV_DEBUG" ] && {
@@ -82,6 +83,6 @@ case "$command" in
     }
 
     shift 1
-    exec "nodenv-$command" "$@"
+    exec "$command_path" "$@"
     ;;
 esac
