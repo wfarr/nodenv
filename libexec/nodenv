@@ -41,7 +41,7 @@ fi
 export NODENV_ROOT
 
 # Jump into the NODENV_DIR
-if [ -z "${NODEENV_DIR}" ]; then
+if [ -z "${NODENV_DIR}" ]; then
   NODENV_DIR="$(pwd)"
 else
   cd "${NODENV_DIR}" 2>/dev/null || {
