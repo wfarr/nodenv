@@ -81,6 +81,8 @@ else
     }
 fi
 
+chmod -R 755 $version_dir
+
 echo "Installed ${version}"
 cd $OLDPWD
 
