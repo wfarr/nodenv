@@ -54,11 +54,7 @@ if [ "$compile" = "--source" ]; then
     }
 else
   # Determine url to download from
-  if [ "$(uname -s)" = "Darwin" ]; then
-    platform="darwin"
-  else
-    platform="$(uname -s)"
-  fi
+  platform="$(uname -s | tr '[:upper:]' '[:lower:]')"
 
   if [ "$(uname -m)" = "x86_64" ]; then
     arch="x64"
