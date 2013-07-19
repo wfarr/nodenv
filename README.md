@@ -14,7 +14,7 @@ Then add the following to your shell config at the end:
 
 ```
 export PATH="$HOME/.nodenv/bin:$PATH"
-eval "(nodenv init -)"
+eval "$(nodenv init -)"
 ```
 
 ## Usage
