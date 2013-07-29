@@ -42,7 +42,7 @@ if [ "$compile" = "--source" ]; then
     curl -s -f "$alt_download" > /tmp/node-$version.tar.gz) && \
     tar zxf /tmp/node-$version.tar.gz -C /tmp && \
     cd /tmp/node-$version && \
-    (./configure --prefix="$version_dir" && make && make install) 2>&1 > /tmp/nodenv-install-$version.log && \
+    ($PYTHON ./configure --prefix="$version_dir" && make && make install) 2>&1 > /tmp/nodenv-install-$version.log && \
     rm /tmp/node-$version.tar.gz && \
     rm -rf /tmp/node-$version || \
     {
