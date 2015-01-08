@@ -15,6 +15,22 @@ set -e
   set -x
 }
 
+list_definitions() {
+  { curl -s "http://nodejs.org/dist/" | \
+    awk 'match($0,/>(v[0-9]+\.[0-9]+\.[0-9]+)\/</) { print substr($0, RSTART + 1, RLENGTH - 3); }' -
+  } | sort_versions | uniq
+}
+
+sort_versions() {
+  LC_ALL=C sort -t. -k 1,1 -k 2,2n -k 3,3n -k 4,4n -k 5,5n
+}
+
+# Provide nodenv completions
+if [ "$1" = "--complete" ]; then
+  list_definitions
+  exit 0
+fi
+
 # Pull the desired version out of ARGV
 version="$1"
 version_dir="$NODENV_ROOT/versions/$version"
