@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+#
+# Summary: List all available nodenv commands
+#
+# Usage: nodenv commands [--sh|--no-sh]
+
+# Bomb out if we hit an error, ever
+set -e
+
+# Verbose output in debug mode
+[ -n "$NODENV_DEBUG" ] && {
+  set -x
+}
+
+# Provide nodenv completions
+if [ "$1" = "--complete" ]; then
+  echo --sh
+  echo --no-sh
+  exit
+fi
+
+if [ "$1" = "--sh" ]; then
+  sh=1
+  shift
+elif [ "$1" = "--no-sh" ]; then
+  nosh=1
+  shift
+fi
+
+IFS=: paths=($PATH)
+
+shopt -s nullglob
+
+{ for path in "${paths[@]}"; do
+    for command in "${path}/nodenv-"*; do
+      command="${command##*nodenv-}"
+      if [ -n "$sh" ]; then
+        if [ ${command:0:3} = "sh-" ]; then
+          echo ${command##sh-}
+        fi
+      elif [ -n "$nosh" ]; then
+        if [ ${command:0:3} != "sh-" ]; then
+          echo ${command##sh-}
+        fi
+      else
+        echo ${command##sh-}
+      fi
+    done
+  done
+} | sort | uniq
