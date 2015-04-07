@@ -79,12 +79,18 @@ else
   fi
 
   # URL to download from
-  download="http://nodejs.org/dist/${version}/node-${version}-${platform}-${arch}.tar.gz"
+  if [[ $1 == iojs-* ]];then
+    ioversion=${1##*-}
+    download="https://iojs.org/dist/${ioversion}/iojs-${ioversion}-${platform}-${arch}.tar.gz"
+  else
+    download="http://nodejs.org/dist/${version}/node-${version}-${platform}-${arch}.tar.gz"
+  fi
 
   # Can't get too clever here
   set +e
 
   # Download binary tarball and install
+  echo $download
   curl -s -f "$download" > /tmp/node-$version.tar.gz && \
     tar zxf /tmp/node-$version.tar.gz --strip-components 1 && \
     rm /tmp/node-$version.tar.gz || \
