@@ -47,8 +47,17 @@ cd "$version_dir"
 
 if [ "$compile" = "--source" ]; then
   # Let's fetch the source and build it
-  download="http://nodejs.org/dist/${version}/node-${version}.tar.gz"
-  alt_download="http://nodejs.org/dist/node-${version}.tar.gz"
+  if [[ $1 == iojs-* ]]; then
+    ioversion=${1##*-}
+    work_dir="/tmp/iojs-$ioversion"
+    download="https://iojs.org/dist/${ioversion}/iojs-${ioversion}.tar.gz"
+    # There is no tarballs at alternatives places on io.js project, so try again!
+    alt_download="https://iojs.org/dist/${ioversion}/iojs-${ioversion}.tar.gz"
+  else
+    download="http://nodejs.org/dist/${version}/node-${version}.tar.gz"
+    alt_download="http://nodejs.org/dist/node-${version}.tar.gz"
+    work_dir="/tmp/node-$version"
+  fi
 
   # Can't get too clever here
   set +e
@@ -57,13 +66,13 @@ if [ "$compile" = "--source" ]; then
   (curl -s -f "$download" > /tmp/node-$version.tar.gz || \
     curl -s -f "$alt_download" > /tmp/node-$version.tar.gz) && \
     tar zxf /tmp/node-$version.tar.gz -C /tmp && \
-    cd /tmp/node-$version && \
+    cd $work_dir && \
     ($PYTHON ./configure --prefix="$version_dir" && make && make install) 2>&1 > /tmp/nodenv-install-$version.log && \
     rm /tmp/node-$version.tar.gz && \
-    rm -rf /tmp/node-$version || \
+    rm -rf $work_dir || \
     {
       cd $OLDPWD
-      rm -rf "$version_dir" /tmp/node-$version.tar.gz /tmp/node-$version
+      rm -rf "$version_dir" /tmp/node-$version.tar.gz $work_dir
 
       echo "nodenv: installation of $version from source failed" >&2
       exit 1
@@ -90,7 +99,6 @@ else
   set +e
 
   # Download binary tarball and install
-  echo $download
   curl -s -f "$download" > /tmp/node-$version.tar.gz && \
     tar zxf /tmp/node-$version.tar.gz --strip-components 1 && \
     rm /tmp/node-$version.tar.gz || \
