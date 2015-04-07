@@ -31,6 +31,12 @@ if [ "$1" = "--complete" ]; then
   exit 0
 fi
 
+# Sugar for install latest version of iojs
+if [[ $1 == iojs ]]; then
+  iolatest=$(curl -s -f https://iojs.org/dist/index.tab | head -n 2 | awk 'NR==2{print $1}')
+  set -- "iojs-$iolatest" "${@:2}"
+fi
+
 # Pull the desired version out of ARGV
 version="$1"
 version_dir="$NODENV_ROOT/versions/$version"
