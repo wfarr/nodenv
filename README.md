@@ -17,6 +17,32 @@ export PATH="$HOME/.nodenv/bin:$PATH"
 eval "$(nodenv init -)"
 ```
 
+## Global install
+
+To install nodenv for usage by all users on the system, this will provide
+the proper environment variables to be set on login shells. Setting the group
+ownership allows members of the group, below creates a new group, you can use
+a pre-existing one also. To add a user to this group `usermod -aG nodenv user`
+
+```
+git clone -b v0.3.3 https://github.com/wfarr/nodenv.git /usr/local/lib/nodenv
+sudo /usr/sbin/groupadd nodenv
+sudo chgrp -R /usr/local/lib/nodenv
+sudo chmod g+ws /usr/local/lib/nodenv
+```
+
+Then add teh following to `/etc/profiled.d/nodenv.sh`
+
+```
+export NODENV_ROOT=/usr/local/lib/nodenv
+export PATH=$NODENV_ROOT/bin:$PATH
+
+eval "$(nodenv init -)"
+
+# Make sure locally install binaries get priority
+export PATH=node_modules/.bin:$PATH
+```
+
 ## Usage
 
 ```
