@@ -66,6 +66,7 @@ if [ -z "$print" ]; then
   { echo "# Load nodenv automatically by adding"
     echo "# the following to ${profile}:"
     echo
+    echo 'export PATH="'${NODENV_ROOT}'/bin:$PATH"'
     echo 'eval "$(nodenv init -)"'
     echo
   } >&2
