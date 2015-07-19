@@ -7,7 +7,7 @@ rbenv, but for node.
 To install the latest stable release:
 
 ```
-git clone -b v0.3.3 https://github.com/wfarr/nodenv.git ~/.nodenv
+git clone -b v0.3.4 https://github.com/wfarr/nodenv.git ~/.nodenv
 ```
 
 Then add the following to your shell config at the end:
@@ -25,7 +25,7 @@ ownership allows members of the group, below creates a new group, you can use
 a pre-existing one also. To add a user to this group `usermod -aG nodenv user`
 
 ```
-git clone -b v0.3.3 https://github.com/wfarr/nodenv.git /usr/local/lib/nodenv
+git clone -b v0.3.4 https://github.com/wfarr/nodenv.git /usr/local/lib/nodenv
 sudo /usr/sbin/groupadd nodenv
 sudo chgrp -R /usr/local/lib/nodenv
 sudo chmod g+ws /usr/local/lib/nodenv
@@ -69,17 +69,17 @@ See `nodenv help <command>' for information on a specific command.
 nodenv install v0.8.28
 
 # Use 0.10 versions
-nodenv install v0.10.38
+nodenv install v0.10.40
 
 # Use 0.12 versions
-nodenv install v0.12.2
+nodenv install v0.12.7
 
 ```
 
 ### Usage with io.js
 ```
 # Use any io.js version
-nodenv install iojs-v1.6.4
+nodenv install iojs-v2.4.0
 
 # You can also install the latest version of io.js
 nodenv install iojs
