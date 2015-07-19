@@ -63,6 +63,28 @@ Some useful nodenv commands are:
 See `nodenv help <command>' for information on a specific command.
 ```
 
+### Usage with Node.js
+```
+# Use 0.8 versions
+nodenv install v0.8.28
+
+# Use 0.10 versions
+nodenv install v0.10.38
+
+# Use 0.12 versions
+nodenv install v0.12.2
+
+```
+
+### Usage with io.js
+```
+# Use any io.js version
+nodenv install iojs-v1.6.4
+
+# You can also install the latest version of io.js
+nodenv install iojs
+```
+
 ## Credits
 
 This library was heavily, heavily, heavily inspired by
