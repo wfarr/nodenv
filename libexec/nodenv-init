@@ -99,3 +99,52 @@ is_fish && {
   echo 'export PATH="'${NODENV_ROOT}'/shims:${PATH}"'
   echo 'nodenv rehash 2>/dev/null'
 }
+
+commands=(`nodenv-commands --sh`)
+case "$shell" in
+fish )
+  cat <<EOS
+function nodenv
+  set command \$argv[1]
+  set -e argv[1]
+
+  switch "\$command"
+  case ${commands[*]}
+    eval (nodenv "sh-\$command" \$argv)
+  case '*'
+    command nodenv "\$command" \$argv
+  end
+end
+EOS
+  ;;
+ksh )
+  cat <<EOS
+function nodenv {
+  typeset command
+EOS
+  ;;
+* )
+  cat <<EOS
+nodenv() {
+  local command
+EOS
+  ;;
+esac
+
+if [ "$shell" != "fish" ]; then
+IFS="|"
+cat <<EOS
+  command="\$1"
+  if [ "\$#" -gt 0 ]; then
+    shift
+  fi
+
+  case "\$command" in
+  ${commands[*]})
+    eval "\`nodenv "sh-\$command" "\$@"\`";;
+  *)
+    command nodenv "\$command" "\$@";;
+  esac
+}
+EOS
+fi
