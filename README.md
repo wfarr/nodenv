@@ -31,7 +31,7 @@ sudo chgrp -R /usr/local/lib/nodenv
 sudo chmod g+ws /usr/local/lib/nodenv
 ```
 
-Then add teh following to `/etc/profiled.d/nodenv.sh`
+Then add the following to `/etc/profiled.d/nodenv.sh`
 
 ```
 export NODENV_ROOT=/usr/local/lib/nodenv
