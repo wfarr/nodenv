@@ -25,6 +25,30 @@ sort_versions() {
   LC_ALL=C sort -t. -k 1,1 -k 2,2n -k 3,3n -k 4,4n -k 5,5n
 }
 
+verified_download() {
+  url="$1"
+  filename=$(basename "$url")
+  shasum_url=$(dirname "$url")/SHASUMS256.txt
+  download_dir=$(mktemp -d /tmp/nodenv.XXXXXX)
+  curl --silent --show-error --fail "$url" --output "$download_dir/$filename" || return 1
+  if curl --silent --show-error --fail "$shasum_url" --output "$download_dir/SHASUMS256.txt"; then
+    # make a checksum file with only one entry
+    awk -v "f=$filename" '$2 == f' "$download_dir/SHASUMS256.txt" > "$download_dir/SHASUM.txt"
+    (
+      cd "$download_dir"
+      shasum -a 256 -c "SHASUM.txt" >/dev/null
+    ) || {
+      rm -rf "$download_dir"
+      echo "ERROR: Download of $url failed checksum check" >&2
+      return 1
+    }
+  else
+    echo "WARNING: $shasum_url not found, download cannot be verified." >&2
+  fi
+  # Provide downloaded, verified filename to caller
+  echo "$download_dir/$filename"
+}
+
 # Provide nodenv completions
 if [ "$1" = "--complete" ]; then
   list_definitions
@@ -60,25 +84,27 @@ if [ "$compile" = "--source" ]; then
     # There is no tarballs at alternatives places on io.js project, so try again!
     alt_download="https://iojs.org/dist/${ioversion}/iojs-${ioversion}.tar.gz"
   else
-    download="http://nodejs.org/dist/${version}/node-${version}.tar.gz"
-    alt_download="http://nodejs.org/dist/node-${version}.tar.gz"
+    download="https://nodejs.org/dist/${version}/node-${version}.tar.gz"
+    alt_download="https://nodejs.org/dist/node-${version}.tar.gz"
     work_dir="/tmp/node-$version"
   fi
 
   # Can't get too clever here
   set +e
 
+  node_file=$(verified_download $download || verified_download $alt_download) || {
+    rm -rf "$version_dir"
+    exit 1
+  }
   # Download source and compile it
-  (curl -s -f "$download" > /tmp/node-$version.tar.gz || \
-    curl -s -f "$alt_download" > /tmp/node-$version.tar.gz) && \
-    tar zxf /tmp/node-$version.tar.gz -C /tmp && \
+  tar zxf "$node_file" -C /tmp && \
     cd $work_dir && \
     ($PYTHON ./configure --prefix="$version_dir" && make && make install) 2>&1 > /tmp/nodenv-install-$version.log && \
-    rm /tmp/node-$version.tar.gz && \
+    rm "$node_file" && \
     rm -rf $work_dir || \
     {
       cd $OLDPWD
-      rm -rf "$version_dir" /tmp/node-$version.tar.gz $work_dir
+      rm -rf "$version_dir" "$node_file" $work_dir
 
       echo "nodenv: installation of $version from source failed" >&2
       exit 1
@@ -98,16 +124,19 @@ else
     ioversion=${1##*-}
     download="https://iojs.org/dist/${ioversion}/iojs-${ioversion}-${platform}-${arch}.tar.gz"
   else
-    download="http://nodejs.org/dist/${version}/node-${version}-${platform}-${arch}.tar.gz"
+    download="https://nodejs.org/dist/${version}/node-${version}-${platform}-${arch}.tar.gz"
   fi
 
   # Can't get too clever here
   set +e
 
   # Download binary tarball and install
-  curl -s -f "$download" > /tmp/node-$version.tar.gz && \
-    tar zxf /tmp/node-$version.tar.gz --strip-components 1 && \
-    rm /tmp/node-$version.tar.gz || \
+  node_file=$(verified_download $download) || {
+    rm -rf "$version_dir"
+    exit 1
+  }
+  tar zxf "$node_file" --strip-components 1 && \
+    rm -f "$node_file" || \
     {
       cd $OLDPWD
       rmdir "$version_dir"
@@ -121,4 +150,3 @@ chmod -R 755 $version_dir
 
 echo "Installed ${version}"
 cd $OLDPWD
-
